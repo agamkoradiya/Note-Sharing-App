@@ -1,6 +1,8 @@
 # Note-Sharing-App
 Using this app you can save your own app and then share it with others via e-mail id.
 
+![sharing](https://user-images.githubusercontent.com/54389203/93631794-1d709a80-f9e4-11ea-904c-70c74f2b43b2.gif)
+
 # How to use it
 1. Clone this repository.
 2. Open your firebase consol.
