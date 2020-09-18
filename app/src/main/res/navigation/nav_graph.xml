@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/myAllNotesFragment">
+
+    <fragment
+        android:id="@+id/myAllNotesFragment"
+        android:name="com.example.notesharing.ui.fragment.MyAllNotesFragment"
+        android:label="fragment_my_all_notes"
+        tools:layout="@layout/fragment_my_all_notes" >
+        <action
+            android:id="@+id/action_myAllNotesFragment_to_addNewNoteFragment"
+            app:destination="@id/addNewNoteFragment"
+            app:popUpTo="@id/myAllNotesFragment" />
+        <action
+            android:id="@+id/action_myAllNotesFragment_to_viewAndEditPersonalNotesFragment"
+            app:destination="@id/viewAndEditPersonalNotesFragment"
+            app:popUpTo="@id/myAllNotesFragment" />
+        <action
+            android:id="@+id/action_myAllNotesFragment_to_allReceivedFragment"
+            app:destination="@id/allReceivedFragment"
+            app:popUpTo="@id/myAllNotesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addNewNoteFragment"
+        android:name="com.example.notesharing.ui.fragment.AddNewNoteFragment"
+        android:label="fragment_add_new_note"
+        tools:layout="@layout/fragment_add_new_note" >
+        <action
+            android:id="@+id/action_addNewNoteFragment_to_myAllNotesFragment"
+            app:destination="@id/myAllNotesFragment"
+            app:popUpTo="@id/myAllNotesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewAndEditPersonalNotesFragment"
+        android:name="com.example.notesharing.ui.fragment.ViewAndEditPersonalNotesFragment"
+        android:label="fragment_view_and_edit_personal_notes"
+        tools:layout="@layout/fragment_view_and_edit_personal_notes" >
+        <argument
+            android:name="selectedPersonalNote"
+            app:argType="com.example.notesharing.model.OneNoteModel" />
+        <action
+            android:id="@+id/action_viewAndEditPersonalNotesFragment_to_myAllNotesFragment"
+            app:destination="@id/myAllNotesFragment"
+            app:popUpTo="@id/myAllNotesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/allReceivedFragment"
+        android:name="com.example.notesharing.ui.fragment.AllReceivedFragment"
+        android:label="fragment_all_received"
+        tools:layout="@layout/fragment_all_received" >
+        <action
+            android:id="@+id/action_allReceivedFragment_to_VAndEReceivedFragment"
+            app:destination="@id/VAndEReceivedFragment"
+            app:popUpTo="@id/allReceivedFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/VAndEReceivedFragment"
+        android:name="com.example.notesharing.ui.fragment.VAndEReceivedFragment"
+        android:label="fragment_v_and_e_received"
+        tools:layout="@layout/fragment_v_and_e_received" >
+        <argument
+            android:name="selectedReceivedNote"
+            app:argType="com.example.notesharing.model.OneNoteModel" />
+        <action
+            android:id="@+id/action_VAndEReceivedFragment_to_allReceivedFragment"
+            app:destination="@id/allReceivedFragment"
+            app:popUpTo="@id/allReceivedFragment" />
+    </fragment>
+</navigation>
