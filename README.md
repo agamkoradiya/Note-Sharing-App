@@ -1,6 +1,5 @@
 # Note-Sharing-App
 Using this app you can save your own app and then share it with others via e-mail id.
-![github readme](https://user-images.githubusercontent.com/54389203/93600904-47ac6300-f9b8-11ea-8fc5-056a68e6c809.gif)
 
 # How to use it
 1. Clone this repository.
