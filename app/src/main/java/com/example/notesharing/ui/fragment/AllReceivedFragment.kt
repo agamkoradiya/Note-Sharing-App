@@ -3,7 +3,6 @@ package com.example.notesharing.ui.fragment
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -14,7 +13,10 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.notesharing.R
 import com.example.notesharing.adapter.MyReceivedNotesAdapter
+import com.example.notesharing.model.OneNoteModel
 import com.example.notesharing.viewmodel.NoteViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 import kotlinx.android.synthetic.main.fragment_all_received.*
@@ -67,7 +69,7 @@ class AllReceivedFragment : Fragment(R.layout.fragment_all_received) {
                 val currentReceivedNote = myReceivedNotesAdapter.allReceivedNotesList[position]
                 when (direction) {
                     ItemTouchHelper.LEFT -> {
-                        viewModel.deleteAReceivedNote(requireContext(), currentReceivedNote.id)
+                        confirmDelete(currentReceivedNote)
                     }
                 }
             }
@@ -117,5 +119,22 @@ class AllReceivedFragment : Fragment(R.layout.fragment_all_received) {
         ItemTouchHelper(itemTouchHelperCallback).apply {
             attachToRecyclerView(allReceivedNotesRecyclerView)
         }
+    }
+
+    private fun confirmDelete(currentReceivedNote: OneNoteModel) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Confirm Delete")
+            .setMessage("Are you sure you want to delete this received note ?")
+            .setPositiveButton("Delete") { dialog, _ ->
+                viewModel.deleteAReceivedNote(requireContext(), currentReceivedNote.id, dialog)
+                Snackbar.make(requireView(), "Delete Pending...", Snackbar.LENGTH_LONG)
+                    .setAction("Undo") {
+                        viewModel.undoDeletedReceivedNote(currentReceivedNote)
+                    }
+                    .show()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.cancel()
+            }.show()
     }
 }

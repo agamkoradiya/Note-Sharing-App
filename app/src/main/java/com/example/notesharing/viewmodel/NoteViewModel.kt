@@ -2,6 +2,7 @@ package com.example.notesharing.viewmodel
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.util.Log
 import android.widget.EditText
 import androidx.hilt.lifecycle.ViewModelInject
@@ -50,7 +51,7 @@ class NoteViewModel @ViewModelInject constructor(
         }
     }
 
-    fun deleteANote(context: Context, noteId: Int?) {
+    fun deleteANote(context: Context, noteId: Int?, dialog: DialogInterface) {
         CoroutineScope(Dispatchers.IO).launch {
             Log.d("Thread", "viewmodel: " + Thread.currentThread().id)
 
@@ -59,8 +60,10 @@ class NoteViewModel @ViewModelInject constructor(
             ).document("N-$noteId").delete()
                 .addOnSuccessListener {
                     context.toast("Note Deleted")
+                    dialog.cancel()
                 }.addOnFailureListener {
                     context.toast("Try Again")
+                    dialog.cancel()
                 }
         }
     }
@@ -106,10 +109,16 @@ class NoteViewModel @ViewModelInject constructor(
     }
 
 
-    fun checkIsUserExist(context: Context, receiversMail: String, noteModel: OneNoteModel, editText: EditText, alertDialog: AlertDialog) {
+    fun checkIsUserExist(
+        context: Context,
+        receiversMail: String,
+        noteModel: OneNoteModel,
+        editText: EditText,
+        alertDialog: AlertDialog
+    ) {
         db.collection("allUsers").whereEqualTo(FieldPath.documentId(), receiversMail)
             .get().addOnSuccessListener {
-                if (it.documents.isEmpty()){
+                if (it.documents.isEmpty()) {
                     context.toast("Email doesn't exist!!!")
                     editText.error = "User doesn't exist"
                 } else {
@@ -167,7 +176,7 @@ class NoteViewModel @ViewModelInject constructor(
         }
     }
 
-    fun deleteAReceivedNote(context: Context, noteId: Int?) {
+    fun deleteAReceivedNote(context: Context, noteId: Int?, dialog: DialogInterface) {
         CoroutineScope(Dispatchers.IO).launch {
             Log.d("Thread", "viewmodel: " + Thread.currentThread().id)
 
@@ -176,8 +185,36 @@ class NoteViewModel @ViewModelInject constructor(
             ).document("N-$noteId").delete()
                 .addOnSuccessListener {
                     context.toast("Note Deleted")
+                    dialog.cancel()
                 }.addOnFailureListener {
                     context.toast("Try Again")
+                    dialog.cancel()
+                }
+        }
+    }
+
+    fun undoDeletedPersonalNote(currentPersonalNote: OneNoteModel) {
+        CoroutineScope(Dispatchers.IO).launch {
+            db.collection(ALL_NOTES).document(mAuth.currentUser?.uid.toString()).collection(
+                PERSONAL_NOTE
+            ).document("N-${currentPersonalNote.id}").set(currentPersonalNote)
+                .addOnSuccessListener {
+                    // success message or do some success work
+                }.addOnFailureListener {
+                    // failure message or do some failure work
+                }
+        }
+    }
+
+    fun undoDeletedReceivedNote(currentReceivedNote: OneNoteModel) {
+        CoroutineScope(Dispatchers.IO).launch {
+            db.collection(ALL_NOTES).document(mAuth.currentUser?.uid.toString()).collection(
+                RECEIVED_NOTE
+            ).document("N-${currentReceivedNote.id}").set(currentReceivedNote)
+                .addOnSuccessListener {
+                    // success message or do some success work
+                }.addOnFailureListener {
+                    // failure message or do some failure work
                 }
         }
     }

@@ -11,7 +11,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -23,9 +22,10 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.example.notesharing.R
 import com.example.notesharing.adapter.MyAllNotesAdapter
+import com.example.notesharing.model.OneNoteModel
 import com.example.notesharing.ui.activity.SignInActivity
 import com.example.notesharing.viewmodel.NoteViewModel
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
@@ -93,10 +93,7 @@ class MyAllNotesFragment : Fragment(R.layout.fragment_my_all_notes) {
                             "MyAllNotesFragment",
                             "onSwiped left $position: -> ${currentPersonalNote.body}"
                         )
-                        viewModel.deleteANote(
-                            requireContext(),
-                            currentPersonalNote.id?.toInt()
-                        )
+                        confirmDelete(currentPersonalNote)
                         myAllNoteAdapter.notifyDataSetChanged()
                     }
 
@@ -229,9 +226,7 @@ class MyAllNotesFragment : Fragment(R.layout.fragment_my_all_notes) {
                 R.id.sign_out -> {
 //                    Toast.makeText(requireContext(), "sign out", Toast.LENGTH_SHORT).show()
                     // Handle search icon press
-                    mAuth.signOut()
-                    val intent = Intent(requireContext(), SignInActivity::class.java)
-                    startActivity(intent)
+                    confirmSignOut()
                     true
                 }
                 else -> false
@@ -246,6 +241,43 @@ class MyAllNotesFragment : Fragment(R.layout.fragment_my_all_notes) {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.top_app_bar_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    private fun confirmDelete(currentPersonalNote: OneNoteModel) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Confirm Delete")
+            .setMessage("Are you sure you want to delete this note ?")
+            .setPositiveButton("Delete") { dialog, _ ->
+                viewModel.deleteANote(
+                    requireContext(),
+                    currentPersonalNote.id,
+                    dialog
+                )
+                Snackbar.make(requireView(), "Delete Pending...", Snackbar.LENGTH_LONG)
+                    .setAction("Undo") {
+                        viewModel.undoDeletedPersonalNote(currentPersonalNote)
+                    }
+                    .show()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.cancel()
+            }.show()
+    }
+
+    private fun confirmSignOut() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Confirm Logout")
+            .setMessage("Are you sure you want to logout ?")
+            .setPositiveButton("Logout") { dialog, _ ->
+                mAuth.signOut()
+                dialog.cancel()
+                val intent = Intent(requireContext(), SignInActivity::class.java)
+                startActivity(intent)
+                activity?.finish()
+            }
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.cancel()
+            }.show()
     }
 
     private fun getMonth(month: Int): String? {
