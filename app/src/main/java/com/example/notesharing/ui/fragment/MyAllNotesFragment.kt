@@ -11,6 +11,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -25,6 +26,7 @@ import com.example.notesharing.model.OneNoteModel
 import com.example.notesharing.ui.activity.SignInActivity
 import com.example.notesharing.viewmodel.NoteViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.AndroidEntryPoint
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
@@ -251,6 +253,11 @@ class MyAllNotesFragment : Fragment(R.layout.fragment_my_all_notes) {
                     currentPersonalNote.id,
                     dialog
                 )
+                Snackbar.make(requireView(), "Delete Pending...", Snackbar.LENGTH_LONG)
+                    .setAction("Undo") {
+                        viewModel.undoDeletedPersonalNote(currentPersonalNote)
+                    }
+                    .show()
             }
             .setNegativeButton("Cancel") { dialog, _ ->
                 dialog.cancel()

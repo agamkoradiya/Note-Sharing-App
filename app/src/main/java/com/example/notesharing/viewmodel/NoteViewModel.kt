@@ -192,4 +192,30 @@ class NoteViewModel @ViewModelInject constructor(
                 }
         }
     }
+
+    fun undoDeletedPersonalNote(currentPersonalNote: OneNoteModel) {
+        CoroutineScope(Dispatchers.IO).launch {
+            db.collection(ALL_NOTES).document(mAuth.currentUser?.uid.toString()).collection(
+                PERSONAL_NOTE
+            ).document("N-${currentPersonalNote.id}").set(currentPersonalNote)
+                .addOnSuccessListener {
+                    // success message or do some success work
+                }.addOnFailureListener {
+                    // failure message or do some failure work
+                }
+        }
+    }
+
+    fun undoDeletedReceivedNote(currentReceivedNote: OneNoteModel) {
+        CoroutineScope(Dispatchers.IO).launch {
+            db.collection(ALL_NOTES).document(mAuth.currentUser?.uid.toString()).collection(
+                RECEIVED_NOTE
+            ).document("N-${currentReceivedNote.id}").set(currentReceivedNote)
+                .addOnSuccessListener {
+                    // success message or do some success work
+                }.addOnFailureListener {
+                    // failure message or do some failure work
+                }
+        }
+    }
 }
