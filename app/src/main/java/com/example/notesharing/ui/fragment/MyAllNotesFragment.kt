@@ -11,7 +11,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -227,6 +226,10 @@ class MyAllNotesFragment : Fragment(R.layout.fragment_my_all_notes) {
 //                    Toast.makeText(requireContext(), "sign out", Toast.LENGTH_SHORT).show()
                     // Handle search icon press
                     confirmSignOut()
+                    true
+                }
+                R.id.profile -> {
+                    findNavController().navigate(R.id.action_myAllNotesFragment_to_profileFragment)
                     true
                 }
                 else -> false
