@@ -3,6 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/profile"
+        android:icon="@drawable/ic_baseline_account_circle_24"
+        android:title="Profile"
+        android:contentDescription="Profile"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/receive"
         android:icon="@drawable/ic_baseline_received_24"
         android:title="Received Notes"

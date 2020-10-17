@@ -22,6 +22,9 @@
             android:id="@+id/action_myAllNotesFragment_to_allReceivedFragment"
             app:destination="@id/allReceivedFragment"
             app:popUpTo="@id/myAllNotesFragment" />
+        <action
+            android:id="@+id/action_myAllNotesFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
     <fragment
         android:id="@+id/addNewNoteFragment"
@@ -70,4 +73,9 @@
             app:destination="@id/allReceivedFragment"
             app:popUpTo="@id/allReceivedFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.example.notesharing.ui.fragment.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
 </navigation>
